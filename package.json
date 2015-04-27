@@ -1,0 +1,27 @@
+{
+  "name": "chatExample",
+  "version": "1.0.0",
+  "description": "chat example for Thinkful",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tstuart/chatExample.git"
+  },
+  "keywords": [
+    "chat",
+    "socketio"
+  ],
+  "author": "Tim Stuart",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tstuart/chatExample/issues"
+  },
+  "homepage": "https://github.com/tstuart/chatExample",
+  "dependencies": {
+    "express": "^4.10.2",
+    "socket.io": "^1.3.5"
+  }
+}
