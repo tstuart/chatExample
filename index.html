@@ -66,9 +66,25 @@
   // If we can register the nickname on the server,
   // we would not have to pass the nick name
   $('form').submit(function(){
+    /*
     socket.emit('chat message', $('#m').val(), nickName);
     $('#m').val('');
     return false;
+
+    */
+
+    // I am a little weak on UI design, so I just
+    // hardcoded this to send a private message
+    // to anyone with the Tim nickname.  Probably
+    // should have the socket id on the client side
+    // and send that back instead.  The drawback to
+    // nicknames is if there are more than one client
+    // with the same nickname.  The server will just
+    // grab the first one on the list.
+    socket.emit('privateChat', $('#m').val(), nickName, 'Tim');
+    $('#m').val('');
+    return false;
+
   });
 
   // when receive a 'chat message' even from the server,

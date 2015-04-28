@@ -21,6 +21,19 @@ function getConnectedUsers() {
   return users;
 }
 
+function getIDByNickName(nickName) {
+  var id = undefined;
+  for (var index in clients) {
+    if (clients.hasOwnProperty(index)) {
+      if (clients[index] == nickName) {
+        id = index;
+        break;
+      }
+    }
+  }
+  return id;
+}
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -59,6 +72,18 @@ io.on('connection', function(socket){
   // from socket so it is not sent back to the sender
   socket.on('chat message', function(msg, nickName) {
     socket.broadcast.emit('chat message', nickName + ': ' + msg);
+  });
+
+  // Add this in order for one client to send a private
+  // message to another client
+  socket.on('privateChat', function(msg, fromNickName, toNickName) {
+    // get id from nickName
+    var id = getIDByNickName(toNickName);
+    console.log(id);
+    if (!id) {
+      msg = fromNickName + ': ' + msg;
+      socket.broadcast.to(id).emit('chat message', msg);
+    }
   });
 
   // using keydown and keyup events to try to implement
