@@ -50,6 +50,9 @@
     socket.emit('addUser', nickName);
 
   // Add keydown and keyup even handlers for input
+  // This is an attempt to add the {user} is typing
+  // functionality.  It works OK, but there has to
+  // be a better way.
   $('#m').keydown( function() {
     socket.emit('keydown', nickName);
   });
@@ -58,16 +61,25 @@
     socket.emit('keyup', nickName);
   });
 
+  // when the form is submitted, send 'chat message'
+  // to server along with message and nickname.
+  // If we can register the nickname on the server,
+  // we would not have to pass the nick name
   $('form').submit(function(){
     socket.emit('chat message', $('#m').val(), nickName);
     $('#m').val('');
     return false;
   });
 
+  // when receive a 'chat message' even from the server,
+  // display message in list.
   socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg));
   });
 
+  // the server fires usersChanged event when
+  // a client connects and disconnects.
+  // Display the message and update connected users
   socket.on('usersChanged', function(msg, users){
     $('#messages').append($('<li>').text(msg));
 
@@ -77,6 +89,9 @@
 
   });
 
+  // using keydown and keyup events to try to implement
+  // the {user} is typing functionality.  It works OK,
+  // but I feel like there is a better way.
   socket.on('keydown', function(nickName) {
     $('#typing').text(nickName + ' is typing')
   });
