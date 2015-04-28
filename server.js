@@ -14,8 +14,8 @@ io.on('connection', function(socket){
     io.emit('chat message', clients[socket.id] + ' has disconnected');
     delete clients[socket.id];
   });
-  socket.on('chat message', function(msg) {
-    io.emit('chat message', msg);
+  socket.on('chat message', function(msg, nickName) {
+    socket.broadcast.emit('chat message', nickName + ': ' + msg);
   });
   socket.on('User Connected', function(nickName) {
     // register Client
