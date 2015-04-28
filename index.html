@@ -66,12 +66,11 @@
   // If we can register the nickname on the server,
   // we would not have to pass the nick name
   $('form').submit(function(){
-    /*
+
+    // Use this code when not testing private chat
     socket.emit('chat message', $('#m').val(), nickName);
     $('#m').val('');
     return false;
-
-    */
 
     // I am a little weak on UI design, so I just
     // hardcoded this to send a private message
@@ -81,9 +80,11 @@
     // nicknames is if there are more than one client
     // with the same nickname.  The server will just
     // grab the first one on the list.
+    /*
     socket.emit('privateChat', $('#m').val(), nickName, 'Tim');
     $('#m').val('');
     return false;
+    */
 
   });
 

@@ -79,8 +79,7 @@ io.on('connection', function(socket){
   socket.on('privateChat', function(msg, fromNickName, toNickName) {
     // get id from nickName
     var id = getIDByNickName(toNickName);
-    console.log(id);
-    if (!id) {
+    if (id !== undefined) {
       msg = fromNickName + ': ' + msg;
       socket.broadcast.to(id).emit('chat message', msg);
     }
