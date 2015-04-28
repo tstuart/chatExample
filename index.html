@@ -11,13 +11,21 @@
     #messages { list-style-type: none; margin: 0; padding: 0; }
     #messages li { padding: 5px 10px; }
     #messages li:nth-child(odd) { background: #eee; }
+    #typing {
+      display:block;
+      width:100%;
+      height:20px;
+      background-color:#475;
+    }
   </style>
 </head>
 <body>
+<div id="typing"></div>
 <ul id="messages"></ul>
 <form action="">
   <input id="m" autocomplete="off" /><button>Send</button>
 </form>
+
 
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
@@ -26,6 +34,15 @@
   var socket = io();
   socket.emit('User Connected', nickName);
 
+  // Add keydown and keyup even handlers for input
+  $('#m').keydown( function() {
+    socket.emit('keydown', nickName);
+  });
+
+  $('#m').keyup( function() {
+    socket.emit('keyup', nickName);
+  });
+
   $('form').submit(function(){
     socket.emit('chat message', $('#m').val(), nickName);
     $('#m').val('');
@@ -33,6 +50,12 @@
   });
   socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg));
+  });
+  socket.on('keydown', function(nickName) {
+    $('#typing').text(nickName + ' is typing')
+  });
+  socket.on('keyup', function(nickName) {
+    $('#typing').text('')
   });
 </script>
 
