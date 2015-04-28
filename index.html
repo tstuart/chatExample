@@ -17,22 +17,37 @@
       height:20px;
       background-color:#475;
     }
+    #typing {
+      display:block;
+      width:100%;
+      height:20px;
+      background-color:#475;
+    }
   </style>
 </head>
 <body>
 <div id="typing"></div>
 <ul id="messages"></ul>
+
+<div id="users"></div>
+
 <form action="">
   <input id="m" autocomplete="off" /><button>Send</button>
 </form>
 
-
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+
 <script>
-  var nickName = 'user' + Math.floor((Math.random() * 9999) + 1000);
+
+  // get a nickname from the user when the page loads
+  var nickName = prompt("What's your name?");
+
+  // connect to server
   var socket = io();
-  socket.emit('User Connected', nickName);
+
+  // Here we are sending a 'User Connected' event
+    socket.emit('addUser', nickName);
 
   // Add keydown and keyup even handlers for input
   $('#m').keydown( function() {
@@ -48,15 +63,28 @@
     $('#m').val('');
     return false;
   });
+
   socket.on('chat message', function(msg){
     $('#messages').append($('<li>').text(msg));
   });
+
+  socket.on('usersChanged', function(msg, users){
+    $('#messages').append($('<li>').text(msg));
+
+    // list all connected users
+    var display = 'Connected Users: ' + users;
+    $('#users').text(display);
+
+  });
+
   socket.on('keydown', function(nickName) {
     $('#typing').text(nickName + ' is typing')
   });
+
   socket.on('keyup', function(nickName) {
     $('#typing').text('')
   });
+
 </script>
 
 </body>

@@ -3,7 +3,20 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var clients = new Array();
+// keep track of connected clients and their nickNames
+// I assume that the
+var clients = [];
+
+// function to get list of connected users
+function getConnectedUsers() {
+  var users = '';
+  for (var index in clients) {
+    if (clients.hasOwnProperty(index)) {
+      users += ' [' + clients[index] + '] ';
+    }
+  }
+  return users;
+}
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -11,19 +24,30 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket){
 
+  //
+  socket.on('addUser', function(nickName) {
+    // register Client
+    clients[socket.id] = nickName;
+
+    // return message and client list
+    var msg = nickName + ' has connected.';
+    var users = getConnectedUsers();
+    io.emit('usersChanged', msg, users);
+
+  });
+
+  //
   socket.on('disconnect', function(){
-    io.emit('chat message', clients[socket.id] + ' has disconnected');
+    var msg = clients[socket.id] + ' has disconnected';
     delete clients[socket.id];
+    var users = getConnectedUsers();
+
+    io.emit('usersChanged', msg, users);
+
   });
 
   socket.on('chat message', function(msg, nickName) {
     socket.broadcast.emit('chat message', nickName + ': ' + msg);
-  });
-
-  socket.on('User Connected', function(nickName) {
-    // register Client
-    clients[socket.id] = nickName;
-    io.emit('chat message', nickName + ' has connected.');
   });
 
   socket.on('keydown', function(nickName) {
