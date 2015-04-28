@@ -3,17 +3,24 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var clients = new Array();
+
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', function(socket){
-  io.emit('chat message', 'a user has connected');
   socket.on('disconnect', function(){
-    io.emit('chat message', 'user disconnected');
+    io.emit('chat message', clients[socket.id] + ' has disconnected');
+    delete clients[socket.id];
   });
   socket.on('chat message', function(msg) {
     io.emit('chat message', msg);
+  });
+  socket.on('User Connected', function(nickName) {
+    // register Client
+    clients[socket.id] = nickName;
+    io.emit('chat message', nickName + ' has connected.');
   });
 });
 
