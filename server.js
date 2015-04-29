@@ -1,3 +1,19 @@
+/*
+
+Questions for weekly chat:
+
+1. Does socket.io already keep track of connected clients?  Do I have maintain
+ my own list like I did here?
+
+2. Is there a way to register a nickname directly to a socket so I don't have
+  to keep passing it to server?
+
+3. The keydown and keyup events that I am using to implement the {user} is typing
+  functionality seems sporadic.  Is there a better way?  I have seen some chat
+  software that shows {user} and {user} are typing.  What I have here would not
+  accomplish this same functionality.
+
+ */
 
 var app = require('express')();
 var http = require('http').Server(app);
